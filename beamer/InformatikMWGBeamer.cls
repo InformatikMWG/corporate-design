@@ -4,7 +4,7 @@
 % This work currently consisting of the file InformatikMWGBeamer.cls
 % is subject to the LaTeX Project Public License, Version 1.3c or - at your option - any later version.
 %
-% This work has the LPPL status 'maintained'
+% The work has the LPPL status 'maintained'
 % Current maintainer of the work is Sebastian Friedl
 
 

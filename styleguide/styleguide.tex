@@ -1,0 +1,114 @@
+% (c) 2018 Sebastian Friedl <sfr682k@t-online.de>
+% This document gets drafted and will be finished soon.
+%
+% This work currently consisting of the file styleguide.tex
+% is subject to the LaTeX Project Public License, Version 1.3c or - at your option - any later version.
+%
+% The work has the LPPL status 'maintained'
+% Current maintainer of the work is Sebastian Friedl
+
+
+\documentclass[abstracton]{scrartcl} 
+
+
+\usepackage{iftex}
+\RequireLuaTeX
+
+\usepackage{fontspec}
+\setmainfont{FiraSans}
+\setsansfont{FiraSans}
+\setmonofont{FiraMono}
+
+\usepackage[pdfborder={0 0 0}]{hyperref}
+
+\usepackage{verbatim}
+
+\usepackage{xcolor}
+\definecolor{MWGRed}{RGB}{100,29,27}
+
+
+\def\informatikMWG{\texttt{InformatikMWG}}
+
+
+\parindent0pt
+
+
+\title{\informatikMWG\ Style Guide}
+\subtitle{for articles and presentations}
+\author{Sebastian Friedl}
+\date{Draft: \today}
+
+\hypersetup{pdftitle={Draft: InformatikMWG Style Guide}, pdfauthor={Sebastian Friedl}}
+
+\begin{document}
+    \maketitle
+
+    \begin{abstract}
+        This document specifies the layout and appearance of official documents published by members of the \informatikMWG\ organization.
+    \end{abstract}
+    
+    \bigskip\bigskip\bigskip
+    
+    \section{Official Templates}
+    We aim to provide official \informatikMWG\ \LaTeX\ document classes following this style guide. Currently, work is in progress; however, it may take some long time until they are finished and matured.
+
+    \medskip
+    We don't --- and we won't --- provide official templates for M\$ Office. On purpose.
+    
+    
+    \section{General Style specifications}
+    This section describes general style specifications to be used for presentations and (smaller) publications.
+    Please note that these specifications do \emph{\textbf{not}} apply to project documentations.
+    
+    \subsection{Page layout}
+    \textit{Presentations:} \\
+    Use frame dimensions of 16\,cm\,$\times$\,9\,cm
+    
+    \medskip
+    \textit{Articles and Reports:} \\
+    Construct the page layout by dividing the page in 10 equal-sized rows and columns (subtract the binding correction from the page width). \\[\smallskipamount]
+    Now, one is able to calculate \dots
+    \begin{itemize}\itemsep0pt
+        \item top margin size (the height of a row),
+        \item bottom margin size (twice the height of a row),
+        \item inner margin size (the width of a column) and
+        \item outer margin size (twice the width of a column)
+    \end{itemize}
+
+    An even simpler solution for \LaTeX-Users: \verb|\usepackage{typearea}|
+    
+    
+    \subsection{Fonts and their usage}
+    \begin{itemize}\itemsep0pt
+        \item Fira Sans\quad for nearly everything
+        \item \texttt{Fira Mono}\quad for code, user names, passwords, URLs and similar stuff
+    \end{itemize}
+    
+    \medskip
+    Both fonts are licensed under the OFL 1.1 and can be downloaded at:
+    \begin{center}
+        \url{http://bboxtype.com/typefaces/FiraSans} or \\
+        \url{https://github.com/carrois/Fira}
+    \end{center}
+    
+    \medskip
+    \textbf{The following basic rules apply:} \nopagebreak
+    \begin{enumerate}
+        \item Whenever possible a font size of 11pt should be used.
+            For use in \texttt{beamer} presentations, Fira should be scaled down to 85\,\% of its natural size.
+        
+        \item Use lining figures (1234567890) instead of old style ones (\fontspec[Numbers=OldStyle]{FiraSans}1234567890)
+        
+        \item For part and section headings, the \textsc{Small Caps} shape should be used.
+    \end{enumerate}
+    
+    
+    \subsection{Colors}
+    \begin{itemize}
+        \item The main color used for text is \textbf{black}
+        \item For structural elements and backgrounds, \textbf{\color{MWGRed}\texttt{MWGRed}} should be used (\texttt{RGB} specification: \texttt{100/29/27})
+        \item If {\color{MWGRed}\texttt{MWGRed}} is used as background color, the foreground color should be white.
+    \end{itemize}
+    
+    
+\end{document}
