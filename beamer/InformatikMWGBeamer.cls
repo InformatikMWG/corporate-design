@@ -16,7 +16,7 @@
 % Provide some information about the class:
 %    \begin{macrocode}
 \ProvidesClass{InformatikMWGBeamer}%
-    [2018/04/03 v0.0 InformatikMWG Corporate Design Presentation Class]
+    [2018/04/04 v0.0 InformatikMWG Corporate Design Presentation Class]
 %    \end{macrocode}
 %
 % Print some \enquote{advertising} to the log:
@@ -24,7 +24,7 @@
 \typeout{}
 \typeout{=================================================}
 \typeout{InformatikMWG Corporate Design Presentation Class}
-\typeout{Version 2018/04/03 v0.0}
+\typeout{Version 2018/04/04 v0.0}
 \typeout{}
 \typeout{(c) 2018 Sebastian Friedl}
 \typeout{Licensed under LPPL 1.3c or later}
@@ -123,7 +123,7 @@
 %
 %
 %
-% \subsection*{Fonts}
+% \subsection*{Load the Fira fonts}
 % The way the fonts are loaded depends on the used engine.
 %    \begin{macrocode}
 \if@informatikmwgbeamer@xeorluatex
@@ -170,57 +170,66 @@
 \DeclareOptionBeamer{draft}{\beamer@drafttrue}
 %    \end{macrocode}
 %
-% Define a \opt{noheadline} option to be used when a table of contents is not necessary
+% Define a \opt{noheadline} option to be used when a Table of Contents is not necessary:
 %    \begin{macrocode}
 \newif\ifbeamer@showheadline
 \beamer@showheadlinetrue
 \DeclareOptionBeamer{noheadline}{\beamer@showheadlinefalse}
 %    \end{macrocode}
 %
-% Processes the options passed to the class
+% Processes the options passed to the class:
 %    \begin{macrocode}
 \ProcessOptionsBeamer
 %    \end{macrocode}
 %
 %
 %
+%
+% \subsection*{Appendix settings}
+% \textbf{TODO:} Adapt code and documentation stuff to the \enquote{new frame numbers} being introduced with one of the next commits
+%    \begin{macrocode}
+\AtBeginDocument{\apptocmd{\appendix}{%
+    \setbeamertemplate{frame numbering}[none]
+    \ifbeamer@showheadline \setbeamertemplate{mwgheadline}[notoc] \fi
+    \setbeamertemplate{part page}[appendix]
+    \frame{\partpage}
+    \addtocounter{framenumber}{-1}
+    \setbeamertemplate{frame numbering}[appendix]}{}{}
+}
+%    \end{macrocode}
+
+% \subsection*{Innerstyling, Part I (Item templates)}
+% Reset the style of all items
+%    \begin{macrocode}
+\setbeamertemplate{items}[default]
+%    \end{macrocode}
+%
+% Itemization template: triangle / dash / bullet points
+%    \begin{macrocode}
+\setbeamertemplate{itemize item}[default]
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{itemize subsubitem}[circle]
+%    \end{macrocode}
+%
+% Table of Contents: Draw boxes around section numbers
+%    \begin{macrocode}
+\setbeamertemplate{sections/subsections in toc}[square]
+%    \end{macrocode}
+%
+% Use the bibliography items as specified by the bibliography package. \\
+% See "beamer"'s user guide, section 10.6 (\enquote{Adding a Bibliography}) for an instruction how to get the cute little icons back.
+%    \begin{macrocode}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Innerstyling, Part II (Frame templates)}
 % \subsection*{Stuff not converted to docstrip yet}
 % It may require some additional time until the following code has been properly converted to something "docstrip"-friendly. \\
 % Please stay patient.
 %    \begin{macrocode}
-% APPENDIX SETTINGS -----------------------------------------------------------------------------------------------------------------------------
-
-% Changes the frame numbering to "Appendix" when the command \appendix is used
-\AtBeginDocument{\apptocmd{\appendix}{%
-    \setbeamertemplate{frame numbering}[none]                           % No frame numbers for the separation frame
-    \ifbeamer@showheadline \setbeamertemplate{mwgheadline}[notoc] \fi   % No navigation in the headlines -- if headlines are shown
-    \setbeamertemplate{part page}[appendix]                             % Removes the counter from the part frames
-    \frame{\partpage}                                                   % Inserts a separation frame
-    \addtocounter{framenumber}{-1}
-    \setbeamertemplate{frame numbering}[appendix]}{}{}                  % Frame numbering for appendix slides
-}
-
-
-
-% INNERSTYLING I (Itemizations, enumerations, table of contents) --------------------------------------------------------------------------------
-
-% Resets the style of all items
-\setbeamertemplate{items}[default]
-
-% Templates used for itemizations
-\setbeamertemplate{itemize item}[default]
-\setbeamertemplate{itemize subitem}{--}
-\setbeamertemplate{itemize subsubitem}[circle]
-
-% Table of contents
-\setbeamertemplate{sections/subsections in toc}[square]
-
-% "Normal" bibliography items
-\setbeamertemplate{bibliography item}{\insertbiblabel}
-
-
-
-% INNERSTYLING II (Title & stucture frames) -----------------------------------------------------------------------------------------------------
 
 % Title frame layout
 \defbeamertemplate*{title page}{MWG}{%
@@ -336,7 +345,7 @@
 
 
 
-% The footline template, currently without logo
+% The footline template, without logo, but featuring “scruffy” frame numbers
 \defbeamertemplate*{footline}{InformatikMWG}{%
     \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=.5ex,leftskip=10ex,rightskip=3ex]{footline}
         \usebeamerfont*{meta information}
@@ -364,91 +373,118 @@
 }
 
 
-
-
-% FONT THEME PART -------------------------------------------------------------------------------------------------------------------------------
-
-% Title frame
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Font theme}
+% Define the font for elements on the title frame:
+%    \begin{macrocode}
 \setbeamerfont*{title}{size=\Large, series=\bfseries, shape=\scshape}
-\setbeamerfont*{subtitle}{family=\sffamily}
+\setbeamerfont*{subtitle}{series=\bfseries}
 \setbeamerfont*{author}{size=\small}
 \setbeamerfont*{institute}{size=\small}
 \setbeamerfont*{date}{size=\small}
-
-% Frame title & subtitle
+%    \end{macrocode}
+%
+% Use a bold font for the frame title:
+%    \begin{macrocode}
 \setbeamerfont*{frametitle}{size=\Large, series=\bfseries, parent=structure}
 \setbeamerfont*{framesubtitle}{size=\footnotesize}
-
-% Footline
-\setbeamerfont*{meta information}{shape=\scshape}
+%    \end{macrocode}
+%
+% Use tiny small caps for content in the head- and footline:
+%    \begin{macrocode}
+\setbeamerfont*{headline}{size=\tiny}
+\setbeamerfont*{section in head/foot}{size=\tiny}
+\setbeamerfont*{footline}{size=\tiny, shape=\scshape}
+\setbeamerfont*{meta information}{parent=footline}
 \setbeamerfont*{frame number}{size=\tiny, shape=\scshape}
-
-% Font styles for part pages
+%    \end{macrocode}
+%
+% Use large bold small caps for part headings on part frames:
+%    \begin{macrocode}
 \setbeamerfont*{part name}{size=\LARGE, series=\bfseries, shape=\scshape}
 \setbeamerfont*{part title}{size=\LARGE, series=\bfseries, shape=\scshape}
-
-% Font styles for section pages
+%    \end{macrocode}
+%
+% Use large small caps for section headings on (sub-)section frames:
+%    \begin{macrocode}
 \setbeamerfont*{section name}{size=\Large, shape=\scshape}
 \setbeamerfont*{section title}{size=\Large, shape=\scshape}
-
-% Font styles for subsection pages
+%    \end{macrocode}
+%
+% Use the italic font shape for subsection headings on subsection frames:
+%    \begin{macrocode}
 \setbeamerfont*{subsection name}{size=\large, shape=\itshape}
 \setbeamerfont*{subsection title}{size=\large, shape=\itshape}
-
-% Font styles for table of contents
-\setbeamerfont*{section number projected}%
-    {size=\small, parent={section in toc,projected text}}
+%    \end{macrocode}
+%
+% Table of Contents: "\large" small caps for section headings, "\small" subsection headings and "\footnotesize"d subsection headings:
+%    \begin{macrocode}
 \setbeamerfont*{section in toc}{parent=structure, size=\large, shape=\scshape}
 \setbeamerfont*{section in toc shaded}{parent=section in toc}
+\setbeamerfont*{section number projected}%
+    {size=\small, parent={section in toc,projected text}}
 \setbeamerfont*{subsection in toc}{size=\small}
 \setbeamerfont*{subsection in toc shaded}{parent=subsection in toc}
 \setbeamerfont*{subsubsection in toc}{size=\footnotesize}
 \setbeamerfont*{subsubsection in toc shaded}{parent=subsubsection in toc}
-
-\setbeamerfont*{section in head/foot}{size=\tiny}
-
-% Caption styles
+%    \end{macrocode}
+%
+% Small caps for the caption name, italics for the caption content:
+%    \begin{macrocode}
 \setbeamerfont*{caption}{size=\small, shape=\itshape}
 \setbeamerfont*{caption name}{parent={structure}, size=\small, shape=\scshape}
-
-% Button styles
+%    \end{macrocode}
+%
+% Use "\tiny" button captions:
+%    \begin{macrocode}
 \setbeamerfont*{button}{size=\tiny}
-
-% Block styles
+%    \end{macrocode}
+%
+% Use small caps for block titles and the normal font for block bodies:
+%    \begin{macrocode}
 \setbeamerfont*{block title}%
     {parent={structure,block body}, size=\large, shape=\scshape}
 \setbeamerfont*{block body}{}
-
-% Example block styles
 \setbeamerfont*{block body example}{}
 \setbeamerfont*{block title example}{parent={block title,example text}}
-
-% Alert block styles
 \setbeamerfont*{block title alerted}{parent={block title,alerted text}}
 \setbeamerfont*{block body alerted}{}
-
-% Item styles
+%    \end{macrocode}
+%
+% Use italics for enumerate items:
+%    \begin{macrocode}
 \setbeamerfont*{item}{parent=structure}
 \setbeamerfont*{itemize item}{parent=item}
 \setbeamerfont*{enumerate item}{shape=\itshape, parent=item}
 \setbeamerfont*{itemize/enumerate body}{}
-
-% Subitem styles
+%    \end{macrocode}
+%
+% Apply the items' font settings to subitems:
+%    \begin{macrocode}
 \setbeamerfont*{subitem}{parent=item}
 \setbeamerfont*{itemize subitem}{parent=subitem}
 \setbeamerfont*{enumerate subitem}{shape=\itshape, parent=subitem}
 \setbeamerfont*{itemize/enumerate subbody}{size=\small}
-
-% Subsubitem styles
+%    \end{macrocode}
+%
+% Apply the subitems' font settings to subsubitems:
+%    \begin{macrocode}
 \setbeamerfont*{subsubitem}{parent=subitem}
 \setbeamerfont*{itemize subsubitem}{parent=subsubitem}
 \setbeamerfont*{enumerate subsubitem}{shape=\itshape, parent=subsubitem}
 \setbeamerfont*{itemize/enumerate subsubbody}{size=\footnotesize}
-
-% Description item styles
-\setbeamerfont*{description item}{series=\bfseries, parent=item}
-
 %    \end{macrocode}
+%
+% Use a bold font for description items:
+%    \begin{macrocode}
+\setbeamerfont*{description item}{series=\bfseries, parent=item}
+%    \end{macrocode}
+%
+%
 %
 %
 % \subsection*{Color theme}
@@ -494,7 +530,7 @@
 \setbeamercolor*{footline}{parent=palette primary}
 %    \end{macrocode}
 %
-% Set up the colors used in the table of contents:
+% Set up the colors used in the Table of Contents:
 %    \begin{macrocode}
 \setbeamercolor*{section in toc}{parent=structure}
 \setbeamercolor*{section in toc shaded}{parent=section in toc}
@@ -556,7 +592,7 @@
     {parent=normal text, use=block title example, bg=block title example.bg!20!bg}
 %    \end{macrocode}
 %
-% Let the item's color depend on the local structure's color:
+% Let the items' color depend on the local structure's color:
 %    \begin{macrocode}
 \setbeamercolor*{item}{parent=local structure}
 \setbeamercolor*{item projected}{parent=item,use=item,fg=white,bg=item.fg}
@@ -725,6 +761,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \textbf{TODO:} Enable switching between showtoc/hidetoc
 %
 %
 %
