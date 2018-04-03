@@ -19,16 +19,16 @@
     [2018/04/03 v0.0 InformatikMWG Corporate Design Presentation Class]
 %    \end{macrocode}
 %
-% Print out some \enquote{advertising:}
+% Print some \enquote{advertising} to the log:
 %    \begin{macrocode}
 \typeout{}
-\typeout{===========================================}
-\typeout{Informatik MWG Corporate Presentation Class}
+\typeout{=================================================}
+\typeout{InformatikMWG Corporate Design Presentation Class}
 \typeout{Version 2018/04/03 v0.0}
 \typeout{}
 \typeout{(c) 2018 Sebastian Friedl}
 \typeout{Licensed under LPPL 1.3c or later}
-\typeout{===========================================}
+\typeout{=================================================}
 \typeout{}
 %    \end{macrocode}
 %
@@ -46,7 +46,7 @@
 \ifLuaTeX\@informatikmwgbeamer@xeorluatextrue\fi
 %    \end{macrocode}
 %
-% Print the result of the detection above to the log (could be useful when debugging this sh**):
+% Print the insight from above to the log (that might come in handy when debugging this sh**):
 %    \begin{macrocode}
 \typeout{}
 \if@informatikmwgbeamer@xeorluatex\typeout{Xe- or LuaLaTeX detected}
@@ -69,7 +69,7 @@
 \if@informatikmwgbeamer@xeorluatex\PassOptionsToClass{hyperref=unicode}{beamer}\fi
 %    \end{macrocode}
 %
-% Load "beamer" and switch to presentation mode to start defining the theme:
+% Load "beamer", switch to presentation mode and start defining the theme:
 %    \begin{macrocode}
 \LoadClass{beamer}
 \mode<presentation>
@@ -89,7 +89,7 @@
     {\noexpand\useoutertheme command ignored. Stick to our corporate design!}}
 %    \end{macrocode}
 %
-% Remove those nasty navigation symbols
+% Remove those nasty navigation symbols:
 %    \begin{macrocode}
 \setbeamertemplate{navigation symbols}{}
 %    \end{macrocode}
@@ -100,9 +100,9 @@
 % \subsection*{Require Packages}
 % Require really required packages:
 % \begin{description}
-%     \item[\texttt{etoolbox}] for obtaining access to some useful \hologo{eTeX} commands
-%     \item[\texttt{tikz}]     for drawing stuff and absolute placement on title, \dots\ frames \\
-%                              "tikz"'s "fadings" library is required for drawing the faded title, \dots\ frame's separation line
+%     \item[\texttt{etoolbox}] for obtaining access to some useful \hologo{eTeX} commands.
+%     \item[\texttt{tikz}]     for drawing stuff and taking over absolute placement on title, part, \dots\ frames.
+%                              "tikz"'s "fadings" library is also loaded for drawing the faded title, part, \dots\ frame's separation line.
 % \end{description}
 %    \begin{macrocode}
 \RequirePackage{etoolbox}
@@ -112,7 +112,7 @@
 %
 % Frame numbering business: \\
 % "beamer", version 3.49 and later declares some nice commands (and templates) useful for numbering frames.
-% However, version 3.48 and newer lack of this feature and require another package: "appendixnumberbeamer".
+% However, version 3.48 and newer lack of this feature; so another package is required: "appendixnumberbeamer".
 %
 % \smallskip
 % To detect "beamer" 3.48 and older, we check wheter "\insertmainframenumber", introduced with version 3.49, is undefined:
@@ -356,8 +356,12 @@
     \fi
 }
 
-
-
+% Remove the logo from the right sidebar
+\defbeamertemplate*{sidebar right}{InformatikMWG}{%
+    \vfill%
+    \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+    \vskip2pt%
+}
 
 
 
@@ -387,7 +391,7 @@
 \setbeamerfont*{section name}{size=\Large, shape=\scshape}
 \setbeamerfont*{section title}{size=\Large, shape=\scshape}
 
-% Font styles for subsecion pages
+% Font styles for subsection pages
 \setbeamerfont*{subsection name}{size=\large, shape=\itshape}
 \setbeamerfont*{subsection title}{size=\large, shape=\itshape}
 
@@ -444,45 +448,54 @@
 % Description item styles
 \setbeamerfont*{description item}{series=\bfseries, parent=item}
 
-
-
-
-% COLOR THEME PART ------------------------------------------------------------------------------------------------------------------------------
-
-% Defines the colors of the MWG logo
+%    \end{macrocode}
+%
+%
+% \subsection*{Color theme}
+% Define a set of basic colors:
+%    \begin{macrocode}
 \definecolor{MWGRed}{RGB}{100,29,27}
 \definecolor{MWGGreen}{RGB}{166,214,35}
 \definecolor{MWGGrey}{RGB}{80,80,80}
-\definecolor{MWGLogo}{RGB}{255,255,255}
-
-% Colors for basic text
+%    \end{macrocode}
+%
+% Set up the basic color scheme:
+%    \begin{macrocode}
 \setbeamercolor{normal text}{fg=black,bg=white}
 \setbeamercolor{alerted text}{fg=red}
 \setbeamercolor{example text}{fg=green!50!black}
-
-% Color for structure items
+%    \end{macrocode}
+%
+% Use "MWGRed" for structure items:
+%    \begin{macrocode}
 \setbeamercolor{structure}{fg=MWGRed}
 \setbeamercolor{local structure}{parent=structure}
-
-% Palette colors
+%    \end{macrocode}
+%
+% Define the color palette:
+%    \begin{macrocode}
 \setbeamercolor*{palette primary}{fg=white,bg=MWGRed}
 \setbeamercolor*{palette secondary}{fg=black,bg=MWGGreen}
 \setbeamercolor*{palette tertiary}{fg=black,bg=MWGGrey}
 \setbeamercolor*{palette quaternary}{fg=black,bg=white}
-
-% Titleframe colors
-\setbeamercolor*{title}{fg=black,bg=white}
-\setbeamercolor*{author}{fg=black}
-\setbeamercolor*{institute}{fg=black}
-\setbeamercolor*{titlegraphic}{fg=black}
-
-% Color for navigation
+%    \end{macrocode}
+%
+% Use the normal text color for text on the title frame:
+%    \begin{macrocode}
+\setbeamercolor*{title}{parent=normal text}
+\setbeamercolor*{author}{parent=normal text}
+\setbeamercolor*{institute}{parent=normal text}
+\setbeamercolor*{titlegraphic}{parent=normal text}
+%    \end{macrocode}
+%
+% Apply the primary colors to the navigation bar (headline) and footline:
+%    \begin{macrocode}
 \setbeamercolor*{section in head/foot}{parent=palette primary}
-
-% Footline colors
 \setbeamercolor*{footline}{parent=palette primary}
-
-% Colors for table of contents
+%    \end{macrocode}
+%
+% Set up the colors used in the table of contents:
+%    \begin{macrocode}
 \setbeamercolor*{section in toc}{parent=structure}
 \setbeamercolor*{section in toc shaded}{parent=section in toc}
 \setbeamercolor*{section number projected}{parent=item projected}
@@ -492,163 +505,232 @@
 \setbeamercolor*{subsubsection in toc}{parent=subsection in toc}
 \setbeamercolor*{subsubsection in toc shaded}{parent=subsubsection in toc}
 \setbeamercolor*{subsubsection number projected}{parent=subsubitem projected}
-
-% Color for logo text
-\setbeamercolor*{logo}{parent=palette secondary}
-
-% Frame (sub-)title colors
-\setbeamercolor*{frametitle}{fg=white,bg=MWGRed}
-\setbeamercolor*{framesubtitle}{fg=white,bg=MWGRed}
-
-% Footnote colors
-\setbeamercolor*{footnote}{fg=MWGRed}
+%    \end{macrocode}
+%
+% Apply the structure color template to the logo:
+%    \begin{macrocode}
+\setbeamercolor*{logo}{parent=structure}
+%    \end{macrocode}
+%
+% Apply the primary colors to frametitle and -subtitle:
+%    \begin{macrocode}
+\setbeamercolor*{frametitle}{parent=palette primary}
+\setbeamercolor*{framesubtitle}{parent=palette primary}
+%    \end{macrocode}
+%
+% Use the structure color for footnotes:
+%    \begin{macrocode}
+\setbeamercolor*{footnote}{parent=structure}
 \setbeamercolor*{footnote mark}{fg=.}
-
-% Caption colors
+%    \end{macrocode}
+%
+% Apply the structure color to the caption name, but not to the caption itself:
+%    \begin{macrocode}
 \setbeamercolor*{caption}{}
-\setbeamercolor*{caption name}{fg=MWGRed}
-
-% Button colors
+\setbeamercolor*{caption name}{fg=structure}
+%    \end{macrocode}
+%
+% Let the button color depend on the local structure's color:
+%    \begin{macrocode}
 \setbeamercolor*{button}{use=local structure,bg=local structure.fg!50!bg,fg=white}
 \setbeamercolor*{button border}{use=button,fg=button.bg}
-
-% Colors for navigation symbols
+%    \end{macrocode}
+%
+% Use a lighter "MWGRed" for the navigation symbols:
+%    \begin{macrocode}
 \setbeamercolor*{navigation symbols}{fg=MWGRed!40!bg}
 \setbeamercolor*{navigation symbols dimmed}{fg=MWGRed!40!bg}
-
-% Sets the colors for normal blocks
+%    \end{macrocode}
+%
+% Let the color of the blocks depend on the primary palette color, example text color and alert text color:
+%    \begin{macrocode}
 \setbeamercolor*{block title}{parent=palette primary}
-\setbeamercolor*{block body}{parent=normal text,use=block title,bg=block title.bg!20!bg}
-
-% Sets the colors for alert blocks
-\setbeamercolor*{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg!85!black!80!white}
-\setbeamercolor*{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!20!bg}
-
-% Sets the colors for example blocks
+\setbeamercolor*{block body}%
+    {parent=normal text, use=block title, bg=block title.bg!20!bg}
+\setbeamercolor*{block title alerted}%
+    {use=alerted text, fg=white, bg=alerted text.fg!85!black!80!white}
+\setbeamercolor*{block body alerted}%
+    {parent=normal text, use=block title alerted, bg=block title alerted.bg!20!bg}
 \setbeamercolor*{block title example}{parent=palette secondary}
-\setbeamercolor*{block body example}{parent=normal text,use=block title example,bg=block title example.bg!20!bg}
-
-% Colors for items
+\setbeamercolor*{block body example}%
+    {parent=normal text, use=block title example, bg=block title example.bg!20!bg}
+%    \end{macrocode}
+%
+% Let the item's color depend on the local structure's color:
+%    \begin{macrocode}
 \setbeamercolor*{item}{parent=local structure}
 \setbeamercolor*{item projected}{parent=item,use=item,fg=white,bg=item.fg}
 \setbeamercolor*{enumerate item}{parent=item}
 \setbeamercolor*{itemize item}{parent=item}
 \setbeamercolor*{itemize/enumerate body}{}
-
-% Colors for subitems
+%    \end{macrocode}
+%
+% Apply the items' color to the subitems:
+%    \begin{macrocode}
 \setbeamercolor*{subitem}{parent=item}
 \setbeamercolor*{subitem projected}{parent=item projected}
 \setbeamercolor*{enumerate subitem}{parent=subitem}
 \setbeamercolor*{itemize subitem}{parent=subitem}
 \setbeamercolor*{itemize/enumerate subbody}{}
-
-% Colors for subsubitems
+%    \end{macrocode}
+%
+% Apply the subitems' color to the subsubitems:
+%    \begin{macrocode}
 \setbeamercolor*{subsubitem}{parent=subitem}
 \setbeamercolor*{subsubitem projected}{parent=subitem projected}
 \setbeamercolor*{enumerate subsubitem}{parent=subsubitem}
 \setbeamercolor*{itemize subsubitem}{parent=subsubitem}
 \setbeamercolor*{itemize/enumerate subsubbody}{}
-
-% Color for description items
+%    \end{macrocode}
+%
+% Apply the item's color to description items:
+%    \begin{macrocode}
 \setbeamercolor*{description item}{parent=item}
-
-% Colors for bibliography
+%    \end{macrocode}
+%
+% Use different tints of "MWGRed" for the bibliography:
+%    \begin{macrocode}
 \setbeamercolor*{bibliography item}{parent=item}
 \setbeamercolor*{bibliography entry author}{fg=MWGRed}
 \setbeamercolor*{bibliography entry title}{use=normal text}
 \setbeamercolor*{bibliography entry location}{fg=MWGRed!65!bg}
 \setbeamercolor*{bibliography entry note}{fg=MWGRed!65!bg}
-
-% Color of seperation line
+%    \end{macrocode}
+%
+% Use "MWGRed" for the separation line:
+%    \begin{macrocode}
 \setbeamercolor*{separation line}{fg=MWGRed}
-
-% Color for abstract environment
+%    \end{macrocode}
+%
+% Use "MWGRed" for the abstact's title:
+%    \begin{macrocode}
 \setbeamercolor*{abstract}{}
 \setbeamercolor*{abstract title}{parent=MWGRed}
-
-% Color for verse environment
+%    \end{macrocode}
+%
+% Use no special color for verses:
+%    \begin{macrocode}
 \setbeamercolor*{verse}{}
-
-% Color for quotation environment
+%    \end{macrocode}
+%
+% Use no special colors for quotes:
+%    \begin{macrocode}
 \setbeamercolor*{quotation}{}
 \setbeamercolor*{quote}{parent=quotation}
-
-% Color for the qed symbol
+%    \end{macrocode}
+%
+% Use "MWGRed" for the qed symbol:
+%    \begin{macrocode}
 \setbeamercolor*{qed symbol}{fg=MWGRed}
-
-
-
-% IDIOT-SAFE COMMANDS FOR INSERTING STRUCTURE FRAMES --------------------------------------------------------------------------------------------
-
-% Redefines \maketitle to being idiot safe ... >:)
-\renewcommand{\maketitle}{%
-	\ifbeamer@inframe
-		\titlepage
-	\else
-		% If \maketitle is used outside a frame the frame number will not be shown on the title frame
-		\setbeamertemplate{frame numbering}[none]
-		\frame{\titlepage}
-		\setbeamertemplate{frame numbering}[fraction]
-	\fi
-}
-
-% Defines a idiot safe \partframe command
-\newcommand{\partframe}{
-	\ifbeamer@inframe
-		\partpage
-	\else
-		% Inserts the part frame
-		\frame{\partpage}
-		\addtocounter{framenumber}{-1}
-	\fi
-}
-
-% Defines a idiot safe \sectionframe command
-\newcommand{\sectionframe}{
-	\ifbeamer@inframe
-		\sectionpage
-	\else
-		% Inserts the section frame
-		\frame{\sectionpage}
-		\addtocounter{framenumber}{-1}
-	\fi
-}
-
-% Defines a idiot safe \subsectionframe command
-\newcommand{\subsectionframe}{
-	\ifbeamer@inframe
-		\subsectionpage
-	\else
-		% Inserts the subsection frame
-		\frame{\subsectionpage}
-		\addtocounter{framenumber}{-1}
-	\fi
-}
-
-
-
-% COMMANDS FOR CHANGING THE THEME'S SETTINGS AND BEHAVIOUR --------------------------------------------------------------------------------------
-
-% Activates / deactivates automatical inserting of part frames
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Intelligent commands for inserting structure frames}
+% \begin{macro}{\maketitle}
+% Create an extra frame without a frame number displayed if "\maketitle" is used outside of a frame
+%    \begin{macrocode}
+\def\maketitle{%
+    \ifbeamer@inframe\titlepage%
+    \else%
+        \setbeamertemplate{frame numbering}[none]%
+        \frame{\titlepage}%
+        \setbeamertemplate{frame numbering}[fraction]%
+    \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\partframe}
+% Behaves like "\partpage", but creates an extra frame not counted into the (total) number of frames if "\partframe" is used outside of a frame
+%    \begin{macrocode}
+\newcommand{\partframe}{%
+    \ifbeamer@inframe\partpage%
+    \else%
+        \frame{\partpage}%
+        \addtocounter{framenumber}{-1}%
+    \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\sectionframe}
+% Behaves like "\sectionpage", but creates an extra frame not counted into the (total) number of frames
+% if "\sectionframe" is used outside of a frame
+%    \begin{macrocode}
+\newcommand{\sectionframe}{%
+    \ifbeamer@inframe\sectionpage%
+    \else%
+        \frame{\sectionpage}%
+        \addtocounter{framenumber}{-1}%
+    \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\subsectionframe}
+% Behaves like "\subsectionpage", but creates an extra frame not counted into the (total) number of frames
+% if "\subsectionframe" is used outside of a frame
+%    \begin{macrocode}
+\newcommand{\subsectionframe}{%
+    \ifbeamer@inframe\subsectionpage%
+    \else%
+        \frame{\subsectionpage}%
+        \addtocounter{framenumber}{-1}%
+    \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+% \subsection*{Commands influencing the class' behavior}
+% \begin{macro}{\activatepartframes}
+% Activate insertion of part frames at the beginning of a part
+%    \begin{macrocode}
 \newcommand{\activatepartframes}{\AtBeginPart{\partframe}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\deactivatepartframes}
+% Deactivate insertion of part frames at the beginning of a part
+%    \begin{macrocode}
 \newcommand{\deactivatepartframes}{\AtBeginPart{}}
-
-% Activates / deactivates automatical inserting of section frames
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\activatesectionframes}
+% Activate insertion of section frames at the beginning of a section
+%    \begin{macrocode}
 \newcommand{\activatesectionframes}{\AtBeginSection{\sectionframe}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\deactivatesectionframes}
+% Deactivate insertion of section frames at the beginning of a section
+%    \begin{macrocode}
 \newcommand{\deactivatesectionframes}{\AtBeginSection{}}
-
-% Activates / deactivates automatical inserting of subsection frames
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\activatesubsectionframes}
+% Activate insertion of subsection frames at the beginning of a subsection
+%    \begin{macrocode}
 \newcommand{\activatesubsectionframes}{\AtBeginSubsection{\subsectionframe}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\deactivatesubsectionframes}
+% Deactivate insertion of subsection frames at the beginning of a subsection
+%    \begin{macrocode}
 \newcommand{\deactivatesubsectionframes}{\AtBeginSubsection{}}
-
-
-
-
-
-
-% END OF FILE -----------------------------------------------------------------------------------------------------------------------------------
-
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+% \subsection*{Famous last words}
+% The theme is loaded completely, so leave presentation mode and stop collecting input.
+%    \begin{macrocode}
 \mode<all>
 \endinput
-
 %    \end{macrocode}
