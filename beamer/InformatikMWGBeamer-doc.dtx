@@ -1,0 +1,62 @@
+% \iffalse
+% (c) 2018 Sebastian Friedl <sfr682k@t-online.de>
+% This documentation is currently under construction and will be finished soon.
+%
+% This work currently consisting of the file InformatikMWGBeamer.cls and InformatikMWGBeamer-doc.dtx
+% is subject to the LaTeX Project Public License, Version 1.3c or - at your option - any later version.
+%
+% The work has the LPPL status 'maintained'
+% Current maintainer of the work is Sebastian Friedl
+% \fi
+
+\documentclass[11pt]{ltxdoc}
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{Free Serif}
+\setmathfont{XITS Math}
+\setsansfont[Scale=MatchLowercase]{Free Sans}
+\setmonofont[Scale=MatchLowercase]{InconsolataN}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+
+\usepackage{csquotes}
+\usepackage{hologo}
+
+\usepackage[DIV=9]{typearea}
+
+\MakeShortVerb{"}
+
+\parindent0pt
+
+\renewcommand*{\usage}[1]{\hyperpage{#1}}
+\renewcommand*{\main}[1]{\hyperpage{#1}}
+\newcommand*{\opt}[1]{\texttt{#1}\index{#1=\texttt{#1}|main}}
+
+\PageIndex
+\RecordChanges
+
+\begin{document}
+    \emph{I know,} this documentation is \emph{very} far away from completed (just like the code it documents \textsc{;d}), but I'm working on it \dots
+    
+    \smallskip
+    Maybe, I'll also write some kind of "InformatikMWGLtxdoc" class to centralize configuration \dots\ but who knows how many \LaTeX\ stuff has to be documented \dots\
+    
+    
+    \StopEventually{%
+        \clearpage
+        \phantomsection
+        \addcontentsline{toc}{part}{Indices}%
+        \PrintChanges
+        \setcounter{IndexColumns}{2}
+        \IndexPrologue{\section*{Index}}
+        \PrintIndex}
+    
+    
+    \clearpage
+    \part{The code}
+    \CodelineNumbered
+    I'm currently wrapping "macrocode" environments around my code; so if the line below is \emph{not} commented, \LaTeX\ may throw up if I f***ed up something ;)
+    \DocInput{InformatikMWGBeamer.cls}
+\end{document}

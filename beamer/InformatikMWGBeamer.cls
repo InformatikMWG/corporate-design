@@ -1,147 +1,193 @@
+% \iffalse
 % (c) 2018 Sebastian Friedl <sfr682k@t-online.de>
 % This class is currently under construction and will be finished soon.
 %
-% This work currently consisting of the file InformatikMWGBeamer.cls
+% This work currently consisting of the file InformatikMWGBeamer.cls and InformatikMWGBeamer-doc.dtx
 % is subject to the LaTeX Project Public License, Version 1.3c or - at your option - any later version.
 %
 % The work has the LPPL status 'maintained'
 % Current maintainer of the work is Sebastian Friedl
-
-
-
-\ProvidesClass{InformatikMWGBeamer}[2018/03/08 Still in Development Informatik MWG Corporate Design Presentation Class]
-
-\PassOptionsToClass{aspectratio=169}{beamer}
-
-
-\RequirePackage{iftex}
-
-\newif\if@informatikmwgbeamer@xeorluatex
-\@informatikmwgbeamer@xeorluatexfalse
-
-\ifXeTeX\@informatikmwgbeamer@xeorluatextrue\fi
-\ifLuaTeX\@informatikmwgbeamer@xeorluatextrue\fi
-
-\if@informatikmwgbeamer@xeorluatex\PassOptionsToClass{hyperref=unicode}{beamer}\fi
-
-\LoadClass{beamer}
-\NeedsTeXFormat{LaTeX2e}
-
-
-% Switches to presentation mode
-\mode<presentation>
-
-
+% \fi
+%
+%
+%
+%
+% \subsection*{Initialisation}
+% Provide some information about the class:
+%    \begin{macrocode}
+\ProvidesClass{InformatikMWGBeamer}%
+    [2018/04/03 v0.0 InformatikMWG Corporate Design Presentation Class]
+%    \end{macrocode}
+%
+% Print out some \enquote{advertising:}
+%    \begin{macrocode}
 \typeout{}
 \typeout{===========================================}
 \typeout{Informatik MWG Corporate Presentation Class}
-\typeout{Version 2018/03/08}
+\typeout{Version 2018/04/03 v0.0}
 \typeout{}
 \typeout{(c) 2018 Sebastian Friedl}
 \typeout{Licensed under LPPL 1.3c or later}
 \typeout{===========================================}
 \typeout{}
-
-
-
-
-\def\usetheme#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\usetheme command ignored. Stick to our corporate design!}}
-\def\usefonttheme#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\usefonttheme command ignored. Stick to our corporate design!}}
-\def\usecolortheme#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\usecolortheme command ignored. Stick to our corporate design!}}
-\def\useinnertheme#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\useinnertheme command ignored. Stick to our corporate design!}}
-\def\useoutertheme#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\useoutertheme command ignored. Stick to our corporate design!}}
-
-
-
-
-
-% REQUIRED PACKAGES -----------------------------------------------------------------------------------------------------------------------------
-
-% Requires basically required packages
-\RequirePackage{appendixnumberbeamer}   % Stops frame counting when the \appendix command is used
-\RequirePackage{etoolbox}               % Enables access on e-TeX primitives
-\RequirePackage{tikz}                   % Frontend for PGF -- required for inner-/outerstyling and option management
-\usetikzlibrary{fadings}
-
-
-% OPTION DECLARATIONS ---------------------------------------------------------------------------------------------------------------------------
-% The headline uses dynamic declaration with pgfkeys (provided by tikz) so one can switch between toc and metainformation during presentation
-
-% Option for not setting the logo
-\newif\ifbeamer@showlogo
-\beamer@showlogotrue
-\DeclareOptionBeamer{nologo}{\beamer@showlogofalse}
-
-% Option for activating draft mode
-\newif\ifbeamer@draft
-\beamer@draftfalse
-\DeclareOptionBeamer{draft}{\beamer@drafttrue}
-
-% Option for using an external logo
-\newif\ifbeamer@externallogo
-\beamer@externallogofalse
-\DeclareOptionBeamer{externallogo}{
-    \beamer@externallogotrue
-    \beamer@showlogofalse}
-
-% Option for not using the simplified logo
-\newif\ifbeamer@simplifiedlogo
-\beamer@simplifiedlogotrue
-\DeclareOptionBeamer{hqlogo}{
-    \beamer@externallogofalse
-    \beamer@showlogotrue
-    \beamer@simplifiedlogofalse}
-
-% Option for not using smallcaps fontshape
-\newif\ifbeamer@smallcaps
-\beamer@smallcapstrue
-\DeclareOptionBeamer{nosmallcaps}{\beamer@smallcapsfalse}
-
-% Option for using an small footline
-\newif\ifbeamer@smallfootline
-\beamer@smallfootlinefalse
-\DeclareOptionBeamer{smallfootline}{
-    \beamer@smallfootlinetrue
-    \beamer@externallogotrue}
-
-% Option for not showing a table of contents in the frame's headline
-\newif\ifbeamer@showtoc
-\beamer@showtoctrue
-\DeclareOptionBeamer{notoc}{\beamer@showtocfalse}
-
-% Option for not showing the headline
-\newif\ifbeamer@showheadline
-\beamer@showheadlinetrue
-\DeclareOptionBeamer{noheadline}{\beamer@showheadlinefalse}
-
-% Processes the options passed to the theme
-\ProcessOptionsBeamer
-
-
-
-% FONTS -----------------------------------------------------------------------------------------------------------------------------------------
-
+%    \end{macrocode}
+%
+% Require \LaTeXe. Anyway, who is still using the old \LaTeX\ 2.09 \dots
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+%    \end{macrocode}
+%
+% Detect whether one of the \enquote{newer,} \enquote{enhanced} engines is used:
+%    \begin{macrocode}
+\RequirePackage{iftex}
+\newif\if@informatikmwgbeamer@xeorluatex
+\@informatikmwgbeamer@xeorluatexfalse
+\ifXeTeX\@informatikmwgbeamer@xeorluatextrue\fi
+\ifLuaTeX\@informatikmwgbeamer@xeorluatextrue\fi
+%    \end{macrocode}
+%
+% Print the result of the detection above to the log (could be useful when debugging this sh**):
+%    \begin{macrocode}
+\typeout{}
+\if@informatikmwgbeamer@xeorluatex\typeout{Xe- or LuaLaTeX detected}
+\else\typeout{Classical (pdf)LaTeX detected}
+\fi
+\typeout{}
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Loading the \texttt{beamer} class}
+% Force an aspect ratio of 16:9:
+%    \begin{macrocode}
+\PassOptionsToClass{aspectratio=169}{beamer}
+%    \end{macrocode}
+%
+% Instruct "hyperref" to use "utf8"-encoding when \hologo{XeLaTeX} or \hologo{LuaLaTeX} is used:
+%    \begin{macrocode}
+\if@informatikmwgbeamer@xeorluatex\PassOptionsToClass{hyperref=unicode}{beamer}\fi
+%    \end{macrocode}
+%
+% Load "beamer" and switch to presentation mode to start defining the theme:
+%    \begin{macrocode}
+\LoadClass{beamer}
+\mode<presentation>
+%    \end{macrocode}
+%
+% Override "beamer"'s commands changing the way things look for disabling changes to the corporate design:
+%    \begin{macrocode}
+\def\usetheme#1{\ClassWarning{InformatikMWGBeamer}%
+    {\noexpand\usetheme command ignored. Stick to our corporate design!}}
+\def\usefonttheme#1{\ClassWarning{InformatikMWGBeamer}%
+    {\noexpand\usefonttheme command ignored. Stick to our corporate design!}}
+\def\usecolortheme#1{\ClassWarning{InformatikMWGBeamer}%
+    {\noexpand\usecolortheme command ignored. Stick to our corporate design!}}
+\def\useinnertheme#1{\ClassWarning{InformatikMWGBeamer}%
+    {\noexpand\useinnertheme command ignored. Stick to our corporate design!}}
+\def\useoutertheme#1{\ClassWarning{InformatikMWGBeamer}%
+    {\noexpand\useoutertheme command ignored. Stick to our corporate design!}}
+%    \end{macrocode}
+%
+% Remove those nasty navigation symbols
+%    \begin{macrocode}
+\setbeamertemplate{navigation symbols}{}
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Require Packages}
+% Require really required packages:
+% \begin{description}
+%     \item[\texttt{etoolbox}] for obtaining access to some useful \hologo{eTeX} commands
+%     \item[\texttt{tikz}]     for drawing stuff and absolute placement on title, \dots\ frames \\
+%                              "tikz"'s "fadings" library is required for drawing the faded title, \dots\ frame's separation line
+% \end{description}
+%    \begin{macrocode}
+\RequirePackage{etoolbox}
+\RequirePackage{tikz}
+    \usetikzlibrary{fadings}
+%    \end{macrocode}
+%
+% Frame numbering business: \\
+% "beamer", version 3.49 and later declares some nice commands (and templates) useful for numbering frames.
+% However, version 3.48 and newer lack of this feature and require another package: "appendixnumberbeamer".
+%
+% \smallskip
+% To detect "beamer" 3.48 and older, we check wheter "\insertmainframenumber", introduced with version 3.49, is undefined:
+%    \begin{macrocode}
+\ifx\insertmainframenumber\@undefined\RequirePackage{appendixnumberbeamer}\fi
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Fonts}
+% The way the fonts are loaded depends on the used engine.
+%    \begin{macrocode}
 \if@informatikmwgbeamer@xeorluatex
+%    \end{macrocode}
+% \hologo{XeLaTeX} and \hologo{LuaLaTeX}: Require "fontspec" and load the OpenType fonts
+%    \begin{macrocode}
     \RequirePackage[no-math]{fontspec}
     \setmainfont[Scale=.85]{FiraSans}
     \setsansfont[Scale=.85]{FiraSans}
     \setmonofont[Scale=.85]{FiraMono}
-    
-    \def\setmainfont#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\setmainfont command ignored. Stick to our corporate design!}}
-    \def\setsansfont#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\setsansfont command ignored. Stick to our corporate design!}}
-    \def\setmonofont#1{\ClassWarning{InformatikMWGBeamer}{\noexpand\setmonofont command ignored. Stick to our corporate design!}}
+%    \end{macrocode}
+% Disable "fontspec"'s commands for switching fonts:
+%    \begin{macrocode}
+    \def\setmainfont#1{\ClassWarning{InformatikMWGBeamer}%
+        {\noexpand\setmainfont command ignored. Stick to our corporate design!}}
+    \def\setsansfont#1{\ClassWarning{InformatikMWGBeamer}%
+        {\noexpand\setsansfont command ignored. Stick to our corporate design!}}
+    \def\setmonofont#1{\ClassWarning{InformatikMWGBeamer}%
+        {\noexpand\setmonofont command ignored. Stick to our corporate design!}}
 \else
+%    \end{macrocode}
+% Ok. We're dealing with somebody using (pdf)\LaTeX, so we have to load some font packages:
+%    \begin{macrocode}
     \RequirePackage[lf,sfdefault, scale=.85]{FiraSans}
     \RequirePackage[lf, scale=.85]{FiraMono}
     \let\rmdefault\sfdefault
     \RequirePackage[T1]{fontenc}
 \fi
-
-% Math support
+%    \end{macrocode}
+%
+% Require the "newtxsf" package since one may require some math symbols:
+%    \begin{macrocode}
 \usepackage{newtxsf}
-
-
-
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Class options}
+% Define a \opt{draft} option leaving a blank space instead of a logo:
+%    \begin{macrocode}
+\newif\ifbeamer@draft
+\beamer@draftfalse
+\DeclareOptionBeamer{draft}{\beamer@drafttrue}
+%    \end{macrocode}
+%
+% Define a \opt{noheadline} option to be used when a table of contents is not necessary
+%    \begin{macrocode}
+\newif\ifbeamer@showheadline
+\beamer@showheadlinetrue
+\DeclareOptionBeamer{noheadline}{\beamer@showheadlinefalse}
+%    \end{macrocode}
+%
+% Processes the options passed to the class
+%    \begin{macrocode}
+\ProcessOptionsBeamer
+%    \end{macrocode}
+%
+%
+%
+% \subsection*{Stuff not converted to docstrip yet}
+% It may require some additional time until the following code has been properly converted to something "docstrip"-friendly. \\
+% Please stay patient.
+%    \begin{macrocode}
 % APPENDIX SETTINGS -----------------------------------------------------------------------------------------------------------------------------
 
 % Changes the frame numbering to "Appendix" when the command \appendix is used
@@ -266,43 +312,14 @@
 % Activates the "compress" option; this results in miniframes being shown in the same row
 \beamer@compresstrue
 
-% Template for "no headline"
-\defbeamertemplate*{headline}{none}{}
-
-% Defines the two possible styles for the headline
-\defbeamertemplate{mwgheadline}{toc}{\insertsectionnavigationhorizontal{\linewidth}{}{\hskip0pt plus1filll}}
-\defbeamertemplate{mwgheadline}{notoc}{}
-
 % Defines the basic headline style
-\defbeamertemplate*{headline}{MWG}{\begin{beamercolorbox}[ht=2.75ex,dp=1.125ex]{section in head/foot}
-    \usebeamertemplate{mwgheadline}
+\defbeamertemplate*{headline}{informatikmwg}{\begin{beamercolorbox}[ht=2.75ex,dp=1.125ex]{section in head/foot}
+    \insertsectionnavigationhorizontal{\linewidth}{}{\hskip0pt plus1filll}%
 \end{beamercolorbox}}
 
 % Decides which style to use -- depending, whether the "notoc" or "noheadline" option has been passed to the theme
-\ifbeamer@showheadline
-    \setbeamertemplate{headline}[MWG]
-    \ifbeamer@showtoc
-        \setbeamertemplate{mwgheadline}[toc]
-    \else
-        \setbeamertemplate{mwgheadline}[notoc]
-    \fi
-\else
-    \setbeamertemplate{headline}[none]
-\fi
+\ifbeamer@showheadline\else\setbeamertemplate{headline}{}\fi
 
-% Lengths and commands for the frame title
-\newlength{\MWG@frametitle@padding}
-\setlength{\MWG@frametitle@padding}{2.2ex}
-\newcommand{\MWG@frametitlestrut@start}{
-	\rule{0pt}{\MWG@frametitle@padding + \totalheightof{\ifcsdef{MWG@frametitleformat}{\MWG@frametitleformat X}{X}}}}
-\newcommand{\MWG@frametitlestrut@end}{\rule[-\MWG@frametitle@padding]{0pt}{\MWG@frametitle@padding}}
-
-% Frame title template
-\defbeamertemplate{frametitle}{MWG}{%
-	\nointerlineskip%
-	\begin{beamercolorbox}[wd=\paperwidth,sep=0pt,leftskip=\MWG@frametitle@padding,rightskip=\MWG@frametitle@padding,]{frametitle}%
-		\MWG@frametitlestrut@start\insertframetitle\MWG@frametitlestrut@end%
-	\end{beamercolorbox}}
 
 % Template for framenumbers:
 % none         no framenumbers are shown (not recommened!)
@@ -317,77 +334,30 @@
 % Selects default template: current frame / total frames
 \setbeamertemplate{frame numbering}[fraction]
 
-% A small footline that comes without the logo but saves space
-\defbeamertemplate*{footline}{MWGsmall}{%
-    \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=1.125ex,leftskip=3ex,rightskip=3ex]{footline}
+
+
+% The footline template, currently without logo
+\defbeamertemplate*{footline}{InformatikMWG}{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=.5ex,leftskip=10ex,rightskip=3ex]{footline}
+        \usebeamerfont*{meta information}
+        \insertshortinstitute
+        \hfill {\usebeamerfont{frame number} \usebeamertemplate{frame numbering}}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=1.125ex,leftskip=10ex,rightskip=3ex]{footline}
         \usebeamerfont*{meta information}
         \insertshortauthor
-        \ifx\beamer@shortauthor\@empty\else
-            \ifx\beamer@shorttitle\@empty\else
-                :
-            \fi
-        \fi
+        \ifx\beamer@shortauthor\@empty\else\ifx\beamer@shorttitle\@empty\else
+            :\quad%
+        \fi\fi
         \insertshorttitle
-        \hfill\usebeamertemplate{frame numbering}
+        \hfill \ifx\insertshortdate\@empty\else \insertshortdate \fi
     \end{beamercolorbox}
-}
-
-% The default footline -- fist with a logo, then without it
-\defbeamertemplate*{footline}{MWG}{%
-    \ifbeamer@showlogo
-        \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=.5ex,leftskip=10ex,rightskip=3ex]{footline}
-            \usebeamerfont*{meta information}
-            \insertshortinstitute
-            \hfill {\usebeamerfont{frame number} \usebeamertemplate{frame numbering}}
-        \end{beamercolorbox}
-        \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=1.125ex,leftskip=10ex,rightskip=3ex]{footline}
-            \usebeamerfont*{meta information}
-            \insertshortauthor
-            \ifx\beamer@shortauthor\@empty\else
-                    \ifx\beamer@shorttitle\@empty\else
-                            :
-                    \fi
-            \fi
-            \insertshorttitle
-            \hfill \ifx\insertshortdate\@empty\else \insertshortdate \fi
-        \end{beamercolorbox}
-        \ifbeamer@draft\else	% TODO: Logo
-        \fi
-    \else
-        \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=.5ex,leftskip=3ex,rightskip=3ex]{footline}
-            \usebeamerfont*{meta information}
-            \insertshortinstitute
-            \hfill {\usebeamerfont{frame number} \usebeamertemplate{frame numbering}}
-        \end{beamercolorbox}
-        \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=1.125ex,leftskip=3ex,rightskip=3ex]{footline}
-            \usebeamerfont*{meta information}
-            \insertshortauthor
-            \ifx\beamer@shortauthor\@empty\else
-                \ifx\beamer@shorttitle\@empty\else
-                    :
-                \fi
-            \fi
-            \insertshorttitle
-            \hfill \ifx\insertshortdate\@empty\else \insertshortdate \fi
-        \end{beamercolorbox}
+    \ifbeamer@draft\else% TODO: Logo
     \fi
 }
 
-% Uses -- if the "smallfootline" option is passed to the theme, a small footline
-\ifbeamer@smallfootline
-    % TODO: Logo stuff
-\else
-    % TODO: Logo stuff
-\fi
 
-% Removes the logo from the right sidebar if it's ought to be shown in the footline
-\ifbeamer@externallogo\else
-    \defbeamertemplate*{sidebar right}{MWG}{%
-        \vfill%
-        \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
-        \vskip2pt%
-    }
-\fi
+
 
 
 
@@ -395,7 +365,7 @@
 % FONT THEME PART -------------------------------------------------------------------------------------------------------------------------------
 
 % Title frame
-\setbeamerfont*{title}{size=\Large, series=\bfseries}
+\setbeamerfont*{title}{size=\Large, series=\bfseries, shape=\scshape}
 \setbeamerfont*{subtitle}{family=\sffamily}
 \setbeamerfont*{author}{size=\small}
 \setbeamerfont*{institute}{size=\small}
@@ -406,24 +376,25 @@
 \setbeamerfont*{framesubtitle}{size=\footnotesize}
 
 % Footline
-\setbeamerfont*{meta information}{}
-\setbeamerfont*{frame number}{size=\tiny}
+\setbeamerfont*{meta information}{shape=\scshape}
+\setbeamerfont*{frame number}{size=\tiny, shape=\scshape}
 
 % Font styles for part pages
-\setbeamerfont*{part name}{size=\LARGE, series=\bfseries}
-\setbeamerfont*{part title}{size=\LARGE, series=\bfseries}
+\setbeamerfont*{part name}{size=\LARGE, series=\bfseries, shape=\scshape}
+\setbeamerfont*{part title}{size=\LARGE, series=\bfseries, shape=\scshape}
 
 % Font styles for section pages
-\setbeamerfont*{section name}{size=\Large}
-\setbeamerfont*{section title}{size=\Large}
+\setbeamerfont*{section name}{size=\Large, shape=\scshape}
+\setbeamerfont*{section title}{size=\Large, shape=\scshape}
 
 % Font styles for subsecion pages
 \setbeamerfont*{subsection name}{size=\large, shape=\itshape}
 \setbeamerfont*{subsection title}{size=\large, shape=\itshape}
 
 % Font styles for table of contents
-\setbeamerfont*{section number projected}{size=\small, parent={section in toc,projected text}}
-\setbeamerfont*{section in toc}{parent=structure, size=\large}
+\setbeamerfont*{section number projected}%
+    {size=\small, parent={section in toc,projected text}}
+\setbeamerfont*{section in toc}{parent=structure, size=\large, shape=\scshape}
 \setbeamerfont*{section in toc shaded}{parent=section in toc}
 \setbeamerfont*{subsection in toc}{size=\small}
 \setbeamerfont*{subsection in toc shaded}{parent=subsection in toc}
@@ -434,13 +405,14 @@
 
 % Caption styles
 \setbeamerfont*{caption}{size=\small, shape=\itshape}
-\setbeamerfont*{caption name}{size=\small, parent={structure}}
+\setbeamerfont*{caption name}{parent={structure}, size=\small, shape=\scshape}
 
 % Button styles
 \setbeamerfont*{button}{size=\tiny}
 
 % Block styles
-\setbeamerfont*{block title}{size=\large, parent={structure,block body}}
+\setbeamerfont*{block title}%
+    {parent={structure,block body}, size=\large, shape=\scshape}
 \setbeamerfont*{block body}{}
 
 % Example block styles
@@ -472,21 +444,6 @@
 % Description item styles
 \setbeamerfont*{description item}{series=\bfseries, parent=item}
 
-% Uses -- unless deactivated -- small capitals for some font styles
-\ifbeamer@smallcaps
-	\setbeamerfont{title}{shape=\scshape}
-	\setbeamerfont{meta information}{shape=\scshape}
-	\setbeamerfont{frame number}{shape=\scshape}
-	\setbeamerfont{caption name}{shape=\scshape}
-	\setbeamerfont{block title}{shape=\scshape}
-	\setbeamerfont{block title alerted}{shape=\scshape}
-	\setbeamerfont{block title example}{shape=\scshape}
-	\setbeamerfont{part name}{shape=\scshape}
-	\setbeamerfont{part title}{shape=\scshape}
-	\setbeamerfont{section name}{shape=\scshape}
-	\setbeamerfont{section title}{shape=\scshape}
-	\setbeamerfont{section in toc}{shape=\scshape}
-\fi
 
 
 
@@ -693,3 +650,5 @@
 
 \mode<all>
 \endinput
+
+%    \end{macrocode}
