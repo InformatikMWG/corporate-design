@@ -101,11 +101,13 @@
 % Require really required packages:
 % \begin{description}
 %     \item[\texttt{etoolbox}] for obtaining access to some useful \hologo{eTeX} commands.
+%     \item[\texttt{ifthen}]   for handling exceptions
 %     \item[\texttt{tikz}]     for drawing stuff and taking over absolute placement on title, part, \dots\ frames.
 %                              "tikz"'s "fadings" library is also loaded for drawing the faded title, part, \dots\ frame's separation line.
 % \end{description}
 %    \begin{macrocode}
 \RequirePackage{etoolbox}
+\RequirePackage{ifthen}
 \RequirePackage{tikz}
     \usetikzlibrary{fadings}
 %    \end{macrocode}
@@ -185,16 +187,19 @@
 %
 %
 %
-% \subsection*{Appendix settings}
-% \textbf{TODO:} Adapt code and documentation stuff to the \enquote{new frame numbers} being introduced with one of the next commits
+% \subsection*{Appendix stuff}
+% \textbf{TODO:} Adapt code and documentation stuff to the frame numbers with progress bar
 %    \begin{macrocode}
+\newif\ifbeamer@insideappendix
+\beamer@insideappendixfalse
 \AtBeginDocument{\apptocmd{\appendix}{%
-    \setbeamertemplate{frame numbering}[none]
-    \ifbeamer@showheadline \setbeamertemplate{mwgheadline}[notoc] \fi
-    \setbeamertemplate{part page}[appendix]
+    \beamer@insideappendixtrue
+    %\setbeamertemplate{frame numbering}[none]
+%     \ifbeamer@showheadline \setbeamertemplate{mwgheadline}[notoc] \fi
+    \setbeamertemplate{part page}[InformatikMWGAppendix]
     \frame{\partpage}
     \addtocounter{framenumber}{-1}
-    \setbeamertemplate{frame numbering}[appendix]}{}{}
+    %\setbeamertemplate{frame numbering}[appendix]}{}{}
 }
 %    \end{macrocode}
 
@@ -232,7 +237,7 @@
 %    \begin{macrocode}
 
 % Title frame layout
-\defbeamertemplate*{title page}{MWG}{%
+\defbeamertemplate*{title page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
@@ -255,7 +260,7 @@
     \end{tikzpicture}}
 
 % Part frame layout
-\defbeamertemplate*{part page}{MWG}{%
+\defbeamertemplate*{part page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
@@ -269,7 +274,7 @@
     \end{tikzpicture}}
 
 % Section frame layout
-\defbeamertemplate*{section page}{MWG}{%
+\defbeamertemplate*{section page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
@@ -283,7 +288,7 @@
     \end{tikzpicture}}
 
 % Subsection frame layout
-\defbeamertemplate*{subsection page}{MWG}{%
+\defbeamertemplate*{subsection page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
@@ -301,7 +306,7 @@
     \end{tikzpicture}}
 
 % Appendix part frame layout
-\defbeamertemplate{part page}{appendix}{%
+\defbeamertemplate{part page}{InformatikMWGAppendix}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
@@ -313,66 +318,135 @@
         \draw[MWGRed, very thick] (current page.west) ++(2.2em,0) -- ++(.5\textwidth,0) coordinate (startfading);
         \draw[MWGRed, very thick, path fading=east] (startfading) -- (current page.east);
     \end{tikzpicture}}
-
-
-
-% OUTERSTYLING (Frame layout) -------------------------------------------------------------------------------------------------------------------
-
-% Activates the "compress" option; this results in miniframes being shown in the same row
+%    \end{macrocode}
+%
+%
+%
+%
+% \subsection*{Outerstyling (Frame components)}
+% \subsubsection*{Headline}
+% Activate "beamer"'s "compress" option so miniframes are shown in the same row:
+%    \begin{macrocode}
 \beamer@compresstrue
-
-% Defines the basic headline style
-\defbeamertemplate*{headline}{informatikmwg}{\begin{beamercolorbox}[ht=2.75ex,dp=1.125ex]{section in head/foot}
-    \insertsectionnavigationhorizontal{\linewidth}{}{\hskip0pt plus1filll}%
-\end{beamercolorbox}}
-
-% Decides which style to use -- depending, whether the "notoc" or "noheadline" option has been passed to the theme
+%    \end{macrocode}
+%
+% Define the headline template. Since we are inserting a "\hskip0pt plus1filll" at the right of the section navigation,
+% the section headings are strung together:
+%    \begin{macrocode}
+\defbeamertemplate*{headline}{informatikmwg}{%
+    \begin{beamercolorbox}[ht=2.75ex,dp=1.125ex]{section in head/foot}
+        \insertsectionnavigationhorizontal{\linewidth}{}{\hskip0pt plus1filll}%
+    \end{beamercolorbox}}
+%    \end{macrocode}
+%
+% Remove the headline when the \opt{noheadline} option is used:
+%    \begin{macrocode}
 \ifbeamer@showheadline\else\setbeamertemplate{headline}{}\fi
-
-
-% Template for framenumbers:
-% none         no framenumbers are shown (not recommened!)
-% counter      a simple frame counter (Example: 1)
-% fraction     framenumbers are shown as  current frame / total frames  (Example:  1 / 10)
-% appendix     An "Appendix" remark instead of frame numbers on appendix frames
-\defbeamertemplate{frame numbering}{none}{}
-\defbeamertemplate{frame numbering}{counter}{\insertframenumber}
-\defbeamertemplate{frame numbering}{fraction}{\insertframenumber\ / \inserttotalframenumber}
-\defbeamertemplate{frame numbering}{appendix}{\appendixname}
-
-% Selects default template: current frame / total frames
-\setbeamertemplate{frame numbering}[fraction]
-
-
-
-% The footline template, without logo, but featuring “scruffy” frame numbers
+%    \end{macrocode}
+%
+%
+% \subsubsection*{Footline}
+% \textit{Meta information} \\
+% The footline consists of two lines: the upper one containing information about the institute
+% and the lower one containing information about author(s) and presentation title. \\
+% Author and title are separated by a colon followed by a "\quad"
+%    \begin{macrocode}
 \defbeamertemplate*{footline}{InformatikMWG}{%
-    \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=.5ex,leftskip=10ex,rightskip=3ex]{footline}
+    \begin{beamercolorbox}%
+            [wd=\paperwidth,ht=2.75ex,dp=.5ex,leftskip=10ex,rightskip=3ex]{footline}
         \usebeamerfont*{meta information}
         \insertshortinstitute
-        \hfill {\usebeamerfont{frame number} \usebeamertemplate{frame numbering}}
-    \end{beamercolorbox}
-    \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=1.125ex,leftskip=10ex,rightskip=3ex]{footline}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}%
+            [wd=\paperwidth,ht=2.75ex,dp=1.125ex,leftskip=10ex,rightskip=3ex]{footline}
         \usebeamerfont*{meta information}
         \insertshortauthor
         \ifx\beamer@shortauthor\@empty\else\ifx\beamer@shorttitle\@empty\else
             :\quad%
         \fi\fi
         \insertshorttitle
-        \hfill \ifx\insertshortdate\@empty\else \insertshortdate \fi
-    \end{beamercolorbox}
-    \ifbeamer@draft\else% TODO: Logo
-    \fi
-}
-
-% Remove the logo from the right sidebar
+    \end{beamercolorbox}%
+%    \end{macrocode}
+%
+% \medskip
+% \textit{The logo} \\
+% \textbf{TODO:} Insert the logo
+%    \begin{macrocode}
+    \ifbeamer@draft\else\begin{tikzpicture}[overlay]
+        \clip (0,0) rectangle (\paperwidth,5.5ex);
+        \node[above right] at (0,0) {\textless{}Logo\textgreater};
+    \end{tikzpicture}\fi%
+%    \end{macrocode}
+%
+% \medskip
+% \textit{Frame numbers} \\
+% Use an "overlay"ed "tikzpicture" for placing the frame numbers.
+% The content has to be "\clip"ped to the requested dimension:
+%    \begin{macrocode}
+    \begin{tikzpicture}[overlay]\large
+        \clip ({\paperwidth-6ex},0) rectangle (\paperwidth,5ex);
+%    \end{macrocode}
+%
+% Draw the outer circle not covered by the progress bar.
+% When being inside the appendix, use the color of the progress bar, so the progress bar is \enquote{invisible}.
+%    \begin{macrocode}
+        \ifbeamer@insideappendix
+            \fill[fill=MWGRed]    (\paperwidth-2.5ex,1.8125ex) circle (3.0ex);
+        \else
+            \fill[fill=MWGRed!40] (\paperwidth-2.5ex,1.8125ex) circle (3.0ex);
+        \fi
+%    \end{macrocode}
+%
+% Draw an inner white circle as background for the frame numbers:
+%    \begin{macrocode}
+        \fill[fill=white]         (\paperwidth-2.5ex,1.8125ex) circle (2.5ex);
+%    \end{macrocode}
+%
+% Now, check whether "beamer"'s advanced frame numbering is provided:
+%    \begin{macrocode}
+        \ifx\insertmainframenumber\@undefined
+%    \end{macrocode}
+%
+% The "\insertmainframenumber" command is undefined, so "beamer"'s advanced frame numbering is \emph{not} available
+% and the "appendixnumberbeamer" package should have been loaded.
+% Insert the current frame number and draw the progress bar if the presentation has got more than 0 frames.
+%    \begin{macrocode}
+            \node[anchor=mid,MWGRed] at (\paperwidth-2.5ex,1.8125ex)
+                {\ifbeamer@insideappendix+\,\fi\insertframenumber};
+            \ifthenelse{\inserttotalframenumber > 0}{%
+                \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
+                    arc (270:{226.5-202*(\insertframenumber/\inserttotalframenumber)}:2.75ex);}{}
+        \else
+%    \end{macrocode}
+%
+% The "\insertmainframenumber" command is defined, so "beamer"'s advanced frame numbering is available.
+% Insert the current frame number and draw the progress bar if the presentation has got more than 0 frames in the main part.
+%    \begin{macrocode}
+            \node[anchor=mid,MWGRed] at (\paperwidth-2.5ex,1.8125ex)
+                {\ifbeamer@insideappendix+\,\insertframenumberinappendix%
+                 \else\insertframenumber%
+                 \fi};
+            \ifbeamer@inappendix\else\ifthenelse{\insertmainframenumber > 0}{%
+                \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
+                    arc (270:{226.5-202*(\insertframenumber/\insertmainframenumber)}:2.75ex);}{}
+        \fi
+%    \end{macrocode}
+%
+% At last, draw a \enquote{replacement} for the progress bar in the non-covered range:
+%    \begin{macrocode}
+        \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
+            arc (270:384.5:2.75ex);
+    \end{tikzpicture}}
+%    \end{macrocode}
+%
+%
+% \subsubsection*{Sidebars}
+% Don't show the logo in the right sidebar since it's placed in the footline:
+%    \begin{macrocode}
 \defbeamertemplate*{sidebar right}{InformatikMWG}{%
     \vfill%
     \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
-    \vskip2pt%
-}
-
-
+    \vskip2pt}
 %    \end{macrocode}
 %
 %
@@ -665,14 +739,15 @@
 %
 % \subsection*{Intelligent commands for inserting structure frames}
 % \begin{macro}{\maketitle}
-% Create an extra frame without a frame number displayed if "\maketitle" is used outside of a frame
+% Create an extra frame without a frame number displayed if "\maketitle" is used outside of a frame \\
+% \textbf{TODO:} Apply the code to the new frame numbers
 %    \begin{macrocode}
 \def\maketitle{%
     \ifbeamer@inframe\titlepage%
     \else%
-        \setbeamertemplate{frame numbering}[none]%
+        %\setbeamertemplate{frame numbering}[none]%
         \frame{\titlepage}%
-        \setbeamertemplate{frame numbering}[fraction]%
+        %\setbeamertemplate{frame numbering}[fraction]%
     \fi}
 %    \end{macrocode}
 % \end{macro}
