@@ -16,7 +16,7 @@
 % Provide some information about the class:
 %    \begin{macrocode}
 \ProvidesClass{InformatikMWGBeamer}%
-    [2018/04/04 v0.0 InformatikMWG Corporate Design Presentation Class]
+    [2018/05/11 v0.1 InformatikMWG Corporate Design Presentation Class]
 %    \end{macrocode}
 %
 % Print some \enquote{advertising} to the log:
@@ -24,7 +24,7 @@
 \typeout{}
 \typeout{=================================================}
 \typeout{InformatikMWG Corporate Design Presentation Class}
-\typeout{Version 2018/04/04 v0.0}
+\typeout{Version 2018/05/11 v0.1}
 \typeout{}
 \typeout{(c) 2018 Sebastian Friedl}
 \typeout{Licensed under LPPL 1.3c or later}
@@ -117,7 +117,7 @@
 % However, version 3.48 and newer lack of this feature; so another package is required: "appendixnumberbeamer".
 %
 % \smallskip
-% To detect "beamer" 3.48 and older, we check wheter "\insertmainframenumber", introduced with version 3.49, is undefined:
+% To detect "beamer" 3.48 and older, we check whether "\insertmainframenumber", introduced with version 3.49, is undefined:
 %    \begin{macrocode}
 \ifx\insertmainframenumber\@undefined\RequirePackage{appendixnumberbeamer}\fi
 %    \end{macrocode}
@@ -133,8 +133,8 @@
 % \hologo{XeLaTeX} and \hologo{LuaLaTeX}: Require "fontspec" and load the OpenType fonts
 %    \begin{macrocode}
     \RequirePackage[no-math]{fontspec}
-    \setmainfont[Scale=.85]{FiraSans}
-    \setsansfont[Scale=.85]{FiraSans}
+    \setmainfont[Numbers=Lining, Scale=.85]{FiraSans}
+    \setsansfont[Numbers=Lining, Scale=.85]{FiraSans}
     \setmonofont[Scale=.85]{FiraMono}
 %    \end{macrocode}
 % Disable "fontspec"'s commands for switching fonts:
@@ -149,11 +149,16 @@
 %    \end{macrocode}
 % Ok. We're dealing with somebody using (pdf)\LaTeX, so we have to load some font packages:
 %    \begin{macrocode}
-    \RequirePackage[lf,sfdefault, scale=.85]{FiraSans}
-    \RequirePackage[lf, scale=.85]{FiraMono}
+    \RequirePackage[lining, sfdefault, scale=.85]{FiraSans}
+    \RequirePackage[lining, scale=.85]{FiraMono}
     \let\rmdefault\sfdefault
     \RequirePackage[T1]{fontenc}
 \fi
+%    \end{macrocode}
+%
+% Since we’re scaling everything down, we must also change the line spread:
+%    \begin{macrocode}
+\linespread{0.9}
 %    \end{macrocode}
 %
 % Require the "newtxsf" package since one may require some math symbols:
@@ -179,6 +184,12 @@
 \DeclareOptionBeamer{noheadline}{\beamer@showheadlinefalse}
 %    \end{macrocode}
 %
+% Define some internal variables and initialize them:
+%    \begin{macrocode}
+\newif\ifbeamer@showframenrs
+\beamer@showframenrstrue
+%    \end{macrocode}
+%
 % Processes the options passed to the class:
 %    \begin{macrocode}
 \ProcessOptionsBeamer
@@ -188,21 +199,20 @@
 %
 %
 % \subsection*{Appendix stuff}
-% \textbf{TODO:} Adapt code and documentation stuff to the frame numbers with progress bar
 %    \begin{macrocode}
 \newif\ifbeamer@insideappendix
 \beamer@insideappendixfalse
 \AtBeginDocument{\apptocmd{\appendix}{%
     \beamer@insideappendixtrue
-    %\setbeamertemplate{frame numbering}[none]
+    \beamer@showframenrsfalse
 %     \ifbeamer@showheadline \setbeamertemplate{mwgheadline}[notoc] \fi
     \setbeamertemplate{part page}[InformatikMWGAppendix]
     \frame{\partpage}
     \addtocounter{framenumber}{-1}
-    %\setbeamertemplate{frame numbering}[appendix]}{}{}
+    \beamer@showframenrstrue}{}{}
 }
 %    \end{macrocode}
-
+%
 % \subsection*{Innerstyling, Part I (Item templates)}
 % Reset the style of all items
 %    \begin{macrocode}
@@ -231,92 +241,113 @@
 %
 %
 % \subsection*{Innerstyling, Part II (Frame templates)}
-% \subsection*{Stuff not converted to docstrip yet}
-% It may require some additional time until the following code has been properly converted to something "docstrip"-friendly. \\
-% Please stay patient.
+% Define the title frame template:
 %    \begin{macrocode}
-
-% Title frame layout
 \defbeamertemplate*{title page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
-        % Presentation title
-        \draw (current page.west) ++(2em,  0.6em) node[anchor=base west, align=left]%
-            {{\usebeamerfont*{title}\usebeamercolor*{title}\ifx\inserttitle\@empty\else\inserttitle\fi}%
-                \ifx\inserttitle\@empty\else \ifx\insertsubtitle\@empty\else \\ \fi\fi%
-                {\usebeamerfont*{subtitle}\usebeamercolor*{subtitle}\ifx\insertsubtitle\@empty\else\insertsubtitle\fi}};
+        \draw (current page.west) ++(2em,  0.6em)
+            node[anchor=base west, align=left]%
+                {{\usebeamerfont*{title}\usebeamercolor*{title}%
+                    \ifx\inserttitle\@empty\else\inserttitle\fi}%
+                \ifx\inserttitle\@empty\else%
+                    \ifx\insertsubtitle\@empty\else\\\fi\fi%
+                 {\usebeamerfont*{subtitle}\usebeamercolor*{subtitle}%
+                    \ifx\insertsubtitle\@empty\else\insertsubtitle\fi}};
         
-        % Separation line
-        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0) -- ++(.5\textwidth,0) coordinate (startfading);
-        \draw[MWGRed, very thick, path fading=east] (startfading) -- (current page.east);
+        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0)
+            -- ++(.5\textwidth,0) coordinate (startfading);
+        \draw[MWGRed, very thick, path fading=east] (startfading)
+            -- (current page.east);
         
-        % Author & institute
         \draw (current page.west) ++(2em, -0.3em) node[anchor=north west, align=left]%
-            {{\usebeamerfont*{author}\usebeamercolor*{author}\ifx\beamer@shortauthor\@empty\else\insertauthor\fi} \\%
-                {\usebeamerfont*{institute}\usebeamercolor*{institute}\ifx\insertinstitute\@empty\else\insertinstitute \fi}%
-                \ifx\insertinstitute\@empty\else \ifx\insertdate\@empty\else \\[\smallskipamount] \fi\fi%
-                {\usebeamerfont*{date}\usebeamercolor*{date}\ifx\insertdate\@empty\else\insertdate\fi}};
+            {\begin{minipage}{\linewidth}
+                {\usebeamerfont*{author}\usebeamercolor*{author}%
+                    \ifx\beamer@shortauthor\@empty\else\insertauthor\fi}\\[\smallskipamount]%
+                {\usebeamerfont*{institute}\usebeamercolor*{institute}%
+                    \ifx\insertinstitute\@empty\else\insertinstitute \fi}%
+                \ifx\insertinstitute\@empty\else%
+                    \ifx\insertdate\@empty\else\\[\medskipamount]\fi\fi%
+                {\usebeamerfont*{date}\usebeamercolor*{date}%
+                    \ifx\insertdate\@empty\else\insertdate\fi}
+             \end{minipage}};
     \end{tikzpicture}}
-
-% Part frame layout
+%    \end{macrocode}
+%
+% Define a part frame template
+%    \begin{macrocode}
 \defbeamertemplate*{part page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
-        % Part title
-        \draw (current page.west) ++(2em,  0.6em) node[anchor=base west, align=left]%
-            {\usebeamerfont*{part title}\usebeamercolor*{title}\insertromanpartnumber.~ \insertpart};
+        \draw (current page.west) ++(2em,  0.6em)
+            node[anchor=base west, align=left]%
+                {\usebeamerfont*{part title}\usebeamercolor*{title}%
+                    \insertromanpartnumber.~ \insertpart};
         
-        % Separation line
-        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0) -- ++(.5\textwidth,0) coordinate (startfading);
-        \draw[MWGRed, very thick, path fading=east] (startfading) -- (current page.east);
+        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0)
+            -- ++(.5\textwidth,0) coordinate (startfading);
+        \draw[MWGRed, very thick, path fading=east] (startfading)
+            -- (current page.east);
     \end{tikzpicture}}
-
-% Section frame layout
+%    \end{macrocode}
+%
+% Define a sectin frame template
+%    \begin{macrocode}
 \defbeamertemplate*{section page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
-        % Section title
-        \draw (current page.west) ++(2em,  0.6em) node[anchor=base west, align=left]%
-            {\usebeamerfont*{section title}\usebeamercolor*{title}\thesection.~ \insertsection};
+        \draw (current page.west) ++(2em,  0.6em)
+            node[anchor=base west, align=left]%
+                {\usebeamerfont*{section title}\usebeamercolor*{title}%
+                    \thesection.~ \insertsection};
             
-        % Separation line
-        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0) -- ++(.5\textwidth,0) coordinate (startfading);
-        \draw[MWGRed, very thick, path fading=east] (startfading) -- (current page.east);
+        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0)
+            -- ++(.5\textwidth,0) coordinate (startfading);
+        \draw[MWGRed, very thick, path fading=east] (startfading)
+            -- (current page.east);
     \end{tikzpicture}}
-
-% Subsection frame layout
+%    \end{macrocode}
+%
+% Define a subsection frame template
+%    \begin{macrocode}
 \defbeamertemplate*{subsection page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
-        % Section title
-        \draw (current page.west) ++(2em,  0.6em) node[anchor=base west, align=left]%
-                {\usebeamerfont*{section title}\usebeamercolor*{title}\thesection.~ \insertsection};
+        \draw (current page.west) ++(2em,  0.6em)
+            node[anchor=base west, align=left]%
+                {\usebeamerfont*{section title}\usebeamercolor*{title}%
+                    \thesection.~ \insertsection};
         
-        % Separation line
-        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0) -- ++(.5\textwidth,0) coordinate (startfading);
-        \draw[MWGRed, very thick, path fading=east] (startfading) -- (current page.east);
+        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0)
+            -- ++(.5\textwidth,0) coordinate (startfading);
+        \draw[MWGRed, very thick, path fading=east] (startfading)
+            -- (current page.east);
         
-        % Subsection title
-        \draw (current page.west) ++(2em, -0.3em) node[anchor=north west, align=left]%
-            {\usebeamerfont*{subsection title}\usebeamercolor*{title}\thesection.\thesubsection~ \insertsubsection};
+        \draw (current page.west) ++(2em, -0.3em)
+            node[anchor=north west, align=left]%
+                {\usebeamerfont*{subsection title}\usebeamercolor*{title}%
+                    \thesection.\thesubsection~ \insertsubsection};
     \end{tikzpicture}}
-
-% Appendix part frame layout
+%    \end{macrocode}
+%
+% Define a part frame template for used inside the appendix
+%    \begin{macrocode}
 \defbeamertemplate{part page}{InformatikMWGAppendix}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
     
     \begin{tikzpicture}[remember picture, overlay]
-        % "Appendix" label
-        \draw (current page.west) ++(2em,  0.6em) node[anchor=base west, align=left]%
-            {\usebeamerfont*{part title}\usebeamercolor*{title}\insertpart};
+        \draw (current page.west) ++(2em,  0.6em)
+            node[anchor=base west, align=left]%
+                {\usebeamerfont*{part title}\usebeamercolor*{title}\insertpart};
         
-        % Separation line
-        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0) -- ++(.5\textwidth,0) coordinate (startfading);
-        \draw[MWGRed, very thick, path fading=east] (startfading) -- (current page.east);
+        \draw[MWGRed, very thick] (current page.west) ++(2.2em,0)
+            -- ++(.5\textwidth,0) coordinate (startfading);
+        \draw[MWGRed, very thick, path fading=east] (startfading)
+            -- (current page.east);
     \end{tikzpicture}}
 %    \end{macrocode}
 %
@@ -383,7 +414,7 @@
 % Use an "overlay"ed "tikzpicture" for placing the frame numbers.
 % The content has to be "\clip"ped to the requested dimension:
 %    \begin{macrocode}
-    \begin{tikzpicture}[overlay]\large
+    \ifbeamer@showframenrs\begin{tikzpicture}[overlay]\large
         \clip ({\paperwidth-6ex},0) rectangle (\paperwidth,5ex);
 %    \end{macrocode}
 %
@@ -428,7 +459,7 @@
                  \fi};
             \ifbeamer@inappendix\else\ifthenelse{\insertmainframenumber > 0}{%
                 \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
-                    arc (270:{226.5-202*(\insertframenumber/\insertmainframenumber)}:2.75ex);}{}
+                    arc (270:{226.5-202*(\insertframenumber/\insertmainframenumber)}:2.75ex);}{}\fi
         \fi
 %    \end{macrocode}
 %
@@ -436,7 +467,7 @@
 %    \begin{macrocode}
         \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
             arc (270:384.5:2.75ex);
-    \end{tikzpicture}}
+    \end{tikzpicture}\fi}
 %    \end{macrocode}
 %
 %
@@ -740,14 +771,13 @@
 % \subsection*{Intelligent commands for inserting structure frames}
 % \begin{macro}{\maketitle}
 % Create an extra frame without a frame number displayed if "\maketitle" is used outside of a frame \\
-% \textbf{TODO:} Apply the code to the new frame numbers
 %    \begin{macrocode}
 \def\maketitle{%
     \ifbeamer@inframe\titlepage%
     \else%
-        %\setbeamertemplate{frame numbering}[none]%
+        \beamer@showframenrsfalse%
         \frame{\titlepage}%
-        %\setbeamertemplate{frame numbering}[fraction]%
+        \beamer@showframenrstrue%
     \fi}
 %    \end{macrocode}
 % \end{macro}
