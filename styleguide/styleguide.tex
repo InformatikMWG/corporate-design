@@ -7,8 +7,10 @@
 % The work has the LPPL status 'maintained'
 % Current maintainer of the work is Sebastian Friedl
 
+% !TeX spellcheck=en_US
 
-\documentclass[DIV=12,abstracton]{scrartcl} 
+
+\documentclass[10pt,DIV=11,abstracton]{scrartcl} 
 
 
 \usepackage{iftex}
@@ -19,22 +21,35 @@
 \setsansfont{FiraSans}
 \setmonofont{FiraMono}
 
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+
+\usepackage[english]{selnolig}
+
+
+
 \usepackage[pdfborder={0 0 0}]{hyperref}
+
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
 
 \usepackage{verbatim}
 
 \usepackage{xcolor}
 \definecolor{MWGRed}{RGB}{100,29,27}
 
+\linespread{1.05}
 
 \def\informatikMWG{\texttt{InformatikMWG}}
 
 
 \parindent0pt
 
+\usepackage{lipsum}
 
 \title{\informatikMWG\ Style Guide}
-\subtitle{for articles and presentations}
+\subtitle{for publications and presentations}
 \author{Sebastian Friedl}
 \date{Draft: \today}
 
@@ -43,7 +58,7 @@
 \begin{document}
     \maketitle
 
-    \begin{abstract}
+    \begin{abstract}\noindent
         This document specifies the layout and appearance of official documents published by members of the \informatikMWG\ organization.
     \end{abstract}
     
@@ -54,31 +69,51 @@
 
     \medskip
     We don't --- and we won't --- provide official templates for M\$ Office. On purpose.
-    
+
     
     \section{General Style specifications}
     This section describes general style specifications to be used for presentations and (smaller) publications.
     Please note that these specifications do \emph{\textbf{not}} apply to project documentations.
     
     \subsection{Page layout}
-    \textit{Presentations:} \\
-    Use frame dimensions of 16\,cm\,$\times$\,9\,cm
+    \subsubsection*{Presentations}
+    Use frame dimensions of 16\,cm\,$\times$\,9\,cm and the default margin sizes.
+    
+    \subsubsection*{Articles and Reports}
+    Construct the page layout by dividing the page in 11 equal-sized rows and columns (subtract the binding correction from the page width). The margin sizes are depicted in table~\ref{tab:margins} with \texttt{rh} representing a row height and \texttt{cw} representing a column width.
+    
+    \begin{table}\centering
+        \begin{tabular}{l@{\quad}>{\ttfamily}r@{\qquad\quad}*{2}{>{\ttfamily}r<{\,cm}}@{\qquad}*{2}{>{\ttfamily}r<{\,cm}}}\toprule
+        	&& \multicolumn{2}{c}{portrait} & \multicolumn{2}{c}{landscape} \\
+            && \multicolumn{1}{c}{A4} & \multicolumn{1}{c}{A5} & \multicolumn{1}{c}{A4} & \multicolumn{1}{c}{A5} \\\midrule
+            %
+        	top margin    &   1\,rh & 2.70 & 1.91 & 1.91 & 1.35 \\
+        	bottom margin &   2\,rh & 5.40 & 3.82 & 3.82 & 2.69 \\\cmidrule{1-6}
+        	left margin   & 1.5\,cw & 2.86 & 2.02 & 4.05 & 2.86 \\
+        	right margin  & 1.5\,cw & 2.86 & 2.02 & 4.05 & 2.86 \\\cmidrule{1-6}
+        	inner margin  &   1\,cw & 1.91 & 1.35 & 2.70 & 1.91 \\
+        	outer margin  &   2\,cw & 3.82 & 2.69 & 5.40 & 3.82 \\\bottomrule
+        \end{tabular}
+    
+        \caption{Margin sizes for some common paper formats}
+        \label{tab:margins}
+    \end{table}
     
     \medskip
-    \textit{Articles and Reports:} \\
-    Construct the page layout by dividing the page in 12 equal-sized rows and columns (subtract the binding correction from the page width). \\[\smallskipamount]
-    Now, one is able to calculate \dots
-    \begin{itemize}\itemsep0pt
-        \item top margin size (the height of a row),
-        \item bottom margin size (twice the height of a row),
-        \item inner margin size (the width of a column) and
-        \item outer margin size (twice the width of a column)
+    \LaTeX\ users may rely on the \verb|typearea| package. \\
+    The “correct” way to load it depends on the used document class:
+    
+    \begin{itemize}
+        \item Standard \LaTeX\ document classes (\verb|article|, \verb|report|, \verb|book|): \\
+            Add \verb|\usepackage[DIV=11]{typearea}| to your preamble
+            
+        \item KOMA Script document classes (\verb|scrartcl|, \verb|scrreprt|, \verb|scrbook|): \\
+            Add the \verb|DIV=11| option to the \verb|\documentclass| command
     \end{itemize}
-
-    An even simpler solution for \LaTeX-Users: \verb|\usepackage{typearea}|
     
     
     \subsection{Fonts and their usage}
+    The corporate design uses these two fonts:
     \begin{itemize}\itemsep0pt
         \item Fira Sans\quad for nearly everything
         \item \texttt{Fira Mono}\quad for code, user names, passwords, URLs and similar stuff
@@ -88,25 +123,22 @@
     Both fonts are licensed under the OFL 1.1 and can be downloaded at:
     \begin{center}
         \url{http://bboxtype.com/typefaces/FiraSans} or \\
-        \url{https://github.com/carrois/Fira}
+        \url{https://github.com/bBoxType/FiraSans}
     \end{center}
     
     \medskip
     \textbf{The following basic rules apply:} \nopagebreak
     \begin{enumerate}
-        \item Whenever possible a font size of 11pt should be used.
-            For use in \texttt{beamer} presentations, Fira should be scaled down to 85\,\% of its natural size.
-        
-        \item Use lining figures (1234567890) instead of old style ones (\fontspec[Numbers=OldStyle]{FiraSans}1234567890)
-        
+        \item Whenever possible a font size of 10pt and line spread of 105\,\% should be used.
+        \item Use lining figures (1234567890) instead of old style ones {(\fontspec[Numbers=OldStyle]{FiraSans}1234567890)}
         \item For part and section headings, the \textsc{Small Caps} shape should be used.
     \end{enumerate}
     
     
     \subsection{Colors}
-    \begin{itemize}
+    \begin{itemize}\itemsep0pt
         \item The main color used for text is \textbf{black}
-        \item For structural elements and backgrounds, \textbf{\color{MWGRed}\texttt{MWGRed}} should be used (\texttt{RGB} specification: \texttt{100/29/27})
+        \item For structural elements and backgrounds, \textbf{\color{MWGRed}\texttt{MWGRed}} (\texttt{rgb(100,29,27)}) should be used
         \item If {\color{MWGRed}\texttt{MWGRed}} is used as background color, the foreground color should be white.
     \end{itemize}
     

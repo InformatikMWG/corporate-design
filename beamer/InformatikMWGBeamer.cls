@@ -16,7 +16,7 @@
 % Provide some information about the class:
 %    \begin{macrocode}
 \ProvidesClass{InformatikMWGBeamer}%
-    [2018/05/11 v0.1 InformatikMWG Corporate Design Presentation Class]
+    [2018/07/04 v0.2 InformatikMWG Corporate Design Presentation Class]
 %    \end{macrocode}
 %
 % Print some \enquote{advertising} to the log:
@@ -24,7 +24,7 @@
 \typeout{}
 \typeout{=================================================}
 \typeout{InformatikMWG Corporate Design Presentation Class}
-\typeout{Version 2018/05/11 v0.1}
+\typeout{Version 2018/07/04 v0.2}
 \typeout{}
 \typeout{(c) 2018 Sebastian Friedl}
 \typeout{Licensed under LPPL 1.3c or later}
@@ -59,9 +59,9 @@
 %
 %
 % \subsection*{Loading the \texttt{beamer} class}
-% Force an aspect ratio of 16:9:
+% Force an aspect ratio of 16:9 and a font size of 10pt:
 %    \begin{macrocode}
-\PassOptionsToClass{aspectratio=169}{beamer}
+\PassOptionsToClass{aspectratio=169, 10pt}{beamer}
 %    \end{macrocode}
 %
 % Instruct "hyperref" to use "utf8"-encoding when \hologo{XeLaTeX} or \hologo{LuaLaTeX} is used:
@@ -119,7 +119,12 @@
 % \smallskip
 % To detect "beamer" 3.48 and older, we check whether "\insertmainframenumber", introduced with version 3.49, is undefined:
 %    \begin{macrocode}
-\ifx\insertmainframenumber\@undefined\RequirePackage{appendixnumberbeamer}\fi
+\ifx\insertmainframenumber\@undefined%
+\RequirePackage{appendixnumberbeamer}%
+\def\insertmainframenumber{\insertframenumber}
+\def\insertframenumberinappendix{\insertframenumber}
+\def\insertappendixframenumber{\inserttotalframenumber}
+\fi
 %    \end{macrocode}
 %
 %
@@ -133,9 +138,9 @@
 % \hologo{XeLaTeX} and \hologo{LuaLaTeX}: Require "fontspec" and load the OpenType fonts
 %    \begin{macrocode}
     \RequirePackage[no-math]{fontspec}
-    \setmainfont[Numbers=Lining, Scale=.85]{FiraSans}
-    \setsansfont[Numbers=Lining, Scale=.85]{FiraSans}
-    \setmonofont[Scale=.85]{FiraMono}
+    \setmainfont[Numbers=Lining]{FiraSans}
+    \setsansfont[Numbers=Lining]{FiraSans}
+    \setmonofont{FiraMono}
 %    \end{macrocode}
 % Disable "fontspec"'s commands for switching fonts:
 %    \begin{macrocode}
@@ -149,21 +154,22 @@
 %    \end{macrocode}
 % Ok. We're dealing with somebody using (pdf)\LaTeX, so we have to load some font packages:
 %    \begin{macrocode}
-    \RequirePackage[lining, sfdefault, scale=.85]{FiraSans}
-    \RequirePackage[lining, scale=.85]{FiraMono}
+    \RequirePackage[lining, sfdefault]{FiraSans}
+    \RequirePackage[lining]{FiraMono}
     \let\rmdefault\sfdefault
     \RequirePackage[T1]{fontenc}
 \fi
 %    \end{macrocode}
 %
-% Since we’re scaling everything down, we must also change the line spread:
+% Increase the line spread
 %    \begin{macrocode}
-\linespread{0.9}
-%    \end{macrocode}
+\linespread{1.05}
+%    \end{macrocode} 
 %
 % Require the "newtxsf" package since one may require some math symbols:
 %    \begin{macrocode}
-\usepackage{newtxsf}
+\PassOptionsToPackage{scaled=1.176}{newtxsf}
+\RequirePackage{newtxsf}
 %    \end{macrocode}
 %
 %
@@ -245,7 +251,7 @@
 %    \begin{macrocode}
 \defbeamertemplate*{title page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
-    
+    %
     \begin{tikzpicture}[remember picture, overlay]
         \draw (current page.west) ++(2em,  0.6em)
             node[anchor=base west, align=left]%
@@ -279,7 +285,7 @@
 %    \begin{macrocode}
 \defbeamertemplate*{part page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
-    
+    %
     \begin{tikzpicture}[remember picture, overlay]
         \draw (current page.west) ++(2em,  0.6em)
             node[anchor=base west, align=left]%
@@ -297,7 +303,7 @@
 %    \begin{macrocode}
 \defbeamertemplate*{section page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
-    
+    %
     \begin{tikzpicture}[remember picture, overlay]
         \draw (current page.west) ++(2em,  0.6em)
             node[anchor=base west, align=left]%
@@ -315,7 +321,7 @@
 %    \begin{macrocode}
 \defbeamertemplate*{subsection page}{InformatikMWG}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
-    
+    %
     \begin{tikzpicture}[remember picture, overlay]
         \draw (current page.west) ++(2em,  0.6em)
             node[anchor=base west, align=left]%
@@ -338,7 +344,7 @@
 %    \begin{macrocode}
 \defbeamertemplate{part page}{InformatikMWGAppendix}{%
     \ifx\insertframetitle\@empty \frametitle{~} \fi
-    
+    %
     \begin{tikzpicture}[remember picture, overlay]
         \draw (current page.west) ++(2em,  0.6em)
             node[anchor=base west, align=left]%
@@ -433,35 +439,16 @@
         \fill[fill=white]         (\paperwidth-2.5ex,1.8125ex) circle (2.5ex);
 %    \end{macrocode}
 %
-% Now, check whether "beamer"'s advanced frame numbering is provided:
-%    \begin{macrocode}
-        \ifx\insertmainframenumber\@undefined
-%    \end{macrocode}
-%
-% The "\insertmainframenumber" command is undefined, so "beamer"'s advanced frame numbering is \emph{not} available
-% and the "appendixnumberbeamer" package should have been loaded.
-% Insert the current frame number and draw the progress bar if the presentation has got more than 0 frames.
-%    \begin{macrocode}
-            \node[anchor=mid,MWGRed] at (\paperwidth-2.5ex,1.8125ex)
-                {\ifbeamer@insideappendix+\,\fi\insertframenumber};
-            \ifthenelse{\inserttotalframenumber > 0}{%
-                \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
-                    arc (270:{226.5-202*(\insertframenumber/\inserttotalframenumber)}:2.75ex);}{}
-        \else
-%    \end{macrocode}
-%
-% The "\insertmainframenumber" command is defined, so "beamer"'s advanced frame numbering is available.
 % Insert the current frame number and draw the progress bar if the presentation has got more than 0 frames in the main part.
 %    \begin{macrocode}
-            \node[anchor=mid,MWGRed] at (\paperwidth-2.5ex,1.8125ex)
-                {\ifbeamer@insideappendix+\,\insertframenumberinappendix%
-                 \else\insertframenumber%
-                 \fi};
-            \ifbeamer@inappendix\else\ifthenelse{\insertmainframenumber > 0}{%
-                \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
-                    arc (270:{226.5-202*(\insertframenumber/\insertmainframenumber)}:2.75ex);}{}\fi
-        \fi
-%    \end{macrocode}
+        \node[anchor=mid,MWGRed] at (\paperwidth-2.5ex,1.8125ex)
+            {\ifbeamer@insideappendix+\,\insertframenumberinappendix%
+             \else\insertframenumber%
+             \fi};
+        \ifbeamer@insideappendix\else\ifthenelse{\insertmainframenumber > 0}{%
+            \draw[MWGRed,line width=.5125ex] ({\paperwidth-2.5ex},-.9375ex)
+                arc (270:{226.5-202*(\insertframenumber/\insertmainframenumber)}:2.75ex);}{}\fi
+    %    \end{macrocode}
 %
 % At last, draw a \enquote{replacement} for the progress bar in the non-covered range:
 %    \begin{macrocode}
